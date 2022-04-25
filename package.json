@@ -7,7 +7,11 @@
     "test": "mocha",
     "coverage": "nyc npm test",
     "coveralls": "nyc npm test && nyc report --reporter=lcov",
-    "start": "tsc-watch --onSuccess \"node dist/index.js\"",
+    "ej1": "tsc && node dist/Ejercicio-01.js",
+    "ej2": "tsc && node dist/Ejercicio-02.js",
+    "ej3": "tsc && node dist/Ejercicio-03.js",
+    "ej4": "tsc && node dist/Ejercicio-04.js",
+    "ej5": "tsc && node dist/Ejercicio-05.js",
     "doc": "typedoc"
   },
   "keywords": [],
@@ -16,6 +20,8 @@
   "devDependencies": {
     "@types/chai": "^4.3.1",
     "@types/mocha": "^9.1.1",
+    "@types/node": "^17.0.26",
+    "@types/yargs": "^17.0.10",
     "@typescript-eslint/eslint-plugin": "^5.20.0",
     "@typescript-eslint/parser": "^5.20.0",
     "chai": "^4.3.6",
@@ -24,7 +30,8 @@
     "mocha": "^9.2.2",
     "ts-node": "^10.7.0",
     "tsc-watch": "^5.0.3",
-    "typescript": "^4.6.3"
+    "typescript": "^4.6.3",
+    "yargs": "^17.4.1"
   },
   "dependencies": {
     "nyc": "^15.1.0",
