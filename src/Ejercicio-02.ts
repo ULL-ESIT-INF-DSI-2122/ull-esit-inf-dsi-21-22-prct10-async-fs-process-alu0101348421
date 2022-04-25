@@ -1,4 +1,4 @@
-import {exec, ExecException, spawn} from 'child_process';
+import {ExecException, spawn} from 'child_process';
 import {access, constants} from 'fs';
 import yargs from 'yargs';
 
@@ -58,15 +58,17 @@ export function searchSubprocess(file: string, word: string, callback:
     (err: ExecException | NodeJS.ErrnoException | null, count: number)
     => void = () => {}) {
   access(file, constants.F_OK, (err) => {
-    if (err) {
+    if (err === null) {
+      spawn('cat', [file])
+          .stdout
+          .pipe(spawn('grep', ['-o', word])
+              .stdin)
+          .on('data', (data) => {
+            const count = data.toString().split('\n').length - 1;
+            callback(null, count);
+          });
+    } else {
       callback(err, 0);
     }
-    exec(`grep -o -i ${word} ${file}`, (err, stdout, stderr) => {
-      if (err) {
-        callback(err, 0);
-      }
-      const count = stdout.split('\n').length - 1;
-      callback(null, count);
-    });
   });
 }
