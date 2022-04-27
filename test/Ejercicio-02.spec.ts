@@ -1,6 +1,6 @@
 import 'mocha';
 import {expect} from 'chai';
-import {searchPipe, searchSubprocess} from '../src/Ejercicio-02';
+import {searchPipe} from '../src/Ejercicio-02';
 
 
 describe('Ejercicio 02', () => {

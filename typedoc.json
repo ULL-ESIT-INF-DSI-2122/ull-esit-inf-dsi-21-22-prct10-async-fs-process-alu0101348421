@@ -1,6 +1,6 @@
 {
   "entryPoints": [
-    "src"
+    "src/modificacion/watch.ts"
   ],
   "out": "./docs"
 }

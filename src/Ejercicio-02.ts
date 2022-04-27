@@ -1,4 +1,4 @@
-import {ExecException, spawn} from 'child_process';
+import {spawn} from 'child_process';
 import {access, constants} from 'fs';
 import yargs from 'yargs';
 
@@ -27,10 +27,16 @@ yargs
       handler: (argv) => {
         const {file, word, method} = argv;
         if (method === 'pipe') {
-          searchPipe(file as string, word as string);
+          searchPipe(file as string, word as string, (err, count) => {
+            if (err) {
+              console.error(err);
+            } else {
+              console.log(`The word '${word}' appears ${count} times`);
+            }
+          });
         }
         if (method === 'subprocess') {
-          searchSubprocess(file as string, word as string);
+          // searchSubprocess(file as string, word as string);
         }
       },
     })
@@ -39,7 +45,7 @@ yargs
 yargs.parse();
 
 export function searchPipe(file: string, word: string, callback:
-    (err: NodeJS.ErrnoException | null, count: number) => void = () => {}) {
+    (err: NodeJS.ErrnoException | null, count: number) => void) {
   access(file, constants.F_OK, (err) => {
     if (err) {
       callback(err, 0);
@@ -54,21 +60,6 @@ export function searchPipe(file: string, word: string, callback:
   });
 }
 
-export function searchSubprocess(file: string, word: string, callback:
-    (err: ExecException | NodeJS.ErrnoException | null, count: number)
-    => void = () => {}) {
-  access(file, constants.F_OK, (err) => {
-    if (err === null) {
-      spawn('cat', [file])
-          .stdout
-          .pipe(spawn('grep', ['-o', word])
-              .stdin)
-          .on('data', (data) => {
-            const count = data.toString().split('\n').length - 1;
-            callback(null, count);
-          });
-    } else {
-      callback(err, 0);
-    }
-  });
-}
+// export function searchSubprocess(file: string, word: string, callback:
+//     (err: ExecException | NodeJS.ErrnoException | null, count: number)
+//     => void) {
