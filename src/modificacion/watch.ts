@@ -48,7 +48,7 @@ export class WatchFile {
             });
           } else {
             console.log(`${filename} has been deleted`);
-            throw new Error('${filename} has been deleted');
+            throw new Error(`${filename} has been deleted`);
           }
         });
       }
