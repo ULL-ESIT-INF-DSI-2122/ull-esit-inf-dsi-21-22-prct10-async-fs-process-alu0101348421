@@ -2,6 +2,9 @@ import {spawn} from 'child_process';
 import {access, constants} from 'fs';
 import yargs from 'yargs';
 
+/**
+ * Manejo de argumentos por línea de comandos
+ */
 yargs
     .command({
       command: 'search',
@@ -36,7 +39,13 @@ yargs
           });
         }
         if (method === 'subprocess') {
-          // searchSubprocess(file as string, word as string);
+          searchSubprocess(file as string, word as string, (err, count) => {
+            if (err) {
+              console.error(err);
+            } else {
+              console.log(`The word '${word}' appears ${count} times`);
+            }
+          });
         }
       },
     })
@@ -44,6 +53,13 @@ yargs
 
 yargs.parse();
 
+/**
+ * Busca el número de veces que aparece una palabra en un archivo mediante
+ * el uso de una tubería.
+ * @param file File to search
+ * @param word Word to search
+ * @param callback Callback
+ */
 export function searchPipe(file: string, word: string, callback:
     (err: NodeJS.ErrnoException | null, count: number) => void) {
   access(file, constants.F_OK, (err) => {
@@ -60,6 +76,13 @@ export function searchPipe(file: string, word: string, callback:
   });
 }
 
+/**
+ * Busca el número de veces que aparece una palabra en un archivo mediante
+ * el uso de subprocesos.
+ * @param file File to search
+ * @param word Word to search
+ * @param callback Callback
+ */
 export function searchSubprocess(file: string, word: string, callback:
     (err: NodeJS.ErrnoException | null, count: number) => void) {
   access(file, constants.F_OK, (err) => {

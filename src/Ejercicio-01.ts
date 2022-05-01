@@ -1,5 +1,8 @@
 import {access, constants, watch} from 'fs';
 
+/**
+ * Ejemplo de código para la resolución del ejercicio
+ */
 if (process.argv.length !== 3) {
   console.log('Please, specify a file');
 } else {

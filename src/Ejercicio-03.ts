@@ -30,6 +30,12 @@ yargs
     })
     .help();
 
+/**
+ * Watch for changes in a directory
+ * @param dir Path of the directory
+ * @param user User of the notes
+ * @param callback Callback
+ */
 export function watch(dir: string, user: string,
     callback: (err: Error | null) => void) {
   fs.watch(dir, (event, filename) => {
@@ -37,7 +43,7 @@ export function watch(dir: string, user: string,
       getUser(`${dir}/${filename}`, (fileErr, fileUser) => {
         if (fileErr) {
           callback(fileErr);
-        } else {
+        } else if (fileUser === user) {
           console.log(`${filename} has been changed by ${fileUser}`);
         }
       });
@@ -49,7 +55,7 @@ export function watch(dir: string, user: string,
           getUser(`${dir}/${filename}`, (fileErr, fileUser) => {
             if (fileErr) {
               callback(fileErr);
-            } else {
+            } else if (fileUser === user) {
               console.log(`${filename} has been created by ${fileUser}`);
             }
           });
@@ -59,6 +65,11 @@ export function watch(dir: string, user: string,
   });
 }
 
+/**
+ * Get the user of a note
+ * @param file Path of the file
+ * @param callback Callback
+ */
 export function getUser(file: string, callback: (err: Error | null,
   user: string | null) => void) {
   fs.readFile(file, (err, data) => {

@@ -1,6 +1,10 @@
 {
   "entryPoints": [
-    "src/modificacion/watch.ts"
+    "src/modificacion/watch.ts",
+    "src/Ejercicio-01.ts",
+    "src/Ejercicio-02.ts",
+    "src/Ejercicio-03.ts",
+    "src/Ejercicio-04.ts"
   ],
   "out": "./docs"
 }

@@ -1,10 +1,24 @@
 import * as fs from 'fs';
 import yargs from 'yargs';
 
-// Clase Wrapper ejercicio 4
+/**
+ * Clase singleton para el manejo de comandos de la terminal
+ * @class
+ */
 export class Wrapper {
+  /**
+   * Instancia de la clase
+   * @type {Wrapper}
+   */
   private static instance: Wrapper;
+  /**
+   * Constructor privado
+   */
   private constructor() {}
+  /**
+   * Método para la obtención de la instancia de la clase
+   * @returns {Wrapper}
+   */
   public static getInstance(): Wrapper {
     if (!Wrapper.instance) {
       Wrapper.instance = new Wrapper();
@@ -12,6 +26,11 @@ export class Wrapper {
     return Wrapper.instance;
   }
 
+  /**
+   * Función que comprueba si una ruta es un fichero
+   * @param path Ruta del fichero
+   * @param callback Función de callback
+   */
   isFile(path: string, callback: (err: NodeJS.ErrnoException | null,
     isFile: boolean) => void): void {
     fs.access(path, fs.constants.F_OK, (err) => {
@@ -28,6 +47,11 @@ export class Wrapper {
     });
   }
 
+  /**
+   * Comprueba si una ruta es un directorio
+   * @param path Ruta del directorio
+   * @param callback Función de callback
+   */
   isDir(path: string, callback: (err: NodeJS.ErrnoException | null,
     isDirectory: boolean) => void): void {
     fs.access(path, fs.constants.F_OK, (err) => {
@@ -44,6 +68,11 @@ export class Wrapper {
     });
   }
 
+  /**
+   * Función que crea un directorio
+   * @param path Ruta del directorio
+   * @param callback Función de callback
+   */
   mkdir(path: string, callback: (err: NodeJS.ErrnoException | null) => void) {
     fs.access(path, fs.constants.F_OK, (err) => {
       if (err?.code === 'ENOENT') {
@@ -56,6 +85,11 @@ export class Wrapper {
     });
   }
 
+  /**
+   * Función ls que lista los ficheros de un directorio
+   * @param path Ruta del directorio
+   * @param callback Función de callback
+   */
   ls(path: string, callback: (err: NodeJS.ErrnoException | null,
       files: string[]) => void) {
     fs.access(path, fs.constants.F_OK, (err) => {
@@ -73,6 +107,11 @@ export class Wrapper {
     });
   }
 
+  /**
+   * Función que lee el contenido de un fichero
+   * @param path Ruta del fichero
+   * @param callback Función de callback
+   */
   readFile(path: string, callback: (err: NodeJS.ErrnoException | null,
       data: string) => void) {
     fs.access(path, fs.constants.F_OK, (err) => {
@@ -89,6 +128,11 @@ export class Wrapper {
     });
   }
 
+  /**
+   * Función que elimina un fichero o directorio
+   * @param path Ruta del fichero o directorio
+   * @param callback Función de callback
+   */
   rm(path: string, callback: (err: NodeJS.ErrnoException | null) => void) {
     fs.access(path, fs.constants.F_OK, (err) => {
       if (err?.code === 'ENOENT') {
@@ -114,6 +158,12 @@ export class Wrapper {
     });
   }
 
+  /**
+   * Función que mueve un fichero
+   * @param src Ruta del fichero
+   * @param dest Ruta de destino
+   * @param callback Función de callback
+   */
   move(src: string, dest: string, callback: (err: NodeJS.ErrnoException | null)
       => void) {
     fs.access(src, fs.constants.F_OK, (err) => {
@@ -140,6 +190,9 @@ export class Wrapper {
   }
 }
 
+/**
+ * Manejo de la línea de comandos
+ */
 yargs
     .command({
       command: 'isFile',
