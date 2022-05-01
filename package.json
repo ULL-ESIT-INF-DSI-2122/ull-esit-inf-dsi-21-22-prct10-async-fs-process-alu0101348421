@@ -14,7 +14,7 @@
     "doc": "typedoc"
   },
   "nyc": {
-    "exclude": "src/modificacion/watch.ts"
+    "exclude": "src/modificacion/*"
   },
   "keywords": [],
   "author": "",
