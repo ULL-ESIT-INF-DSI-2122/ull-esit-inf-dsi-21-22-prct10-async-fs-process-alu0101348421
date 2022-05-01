@@ -18,9 +18,9 @@ export class Wrapper {
       if (err) {
         callback(null, false);
       } else {
-        fs.stat(path, (err, stats) => {
-          if (err) {
-            callback(err, false);
+        fs.stat(path, (statErr, stats) => {
+          if (statErr) {
+            callback(statErr, false);
           }
           callback(null, stats.isFile());
         });
@@ -34,9 +34,9 @@ export class Wrapper {
       if (err) {
         callback(null, false);
       } else {
-        fs.stat(path, (err, stats) => {
-          if (err) {
-            callback(err, false);
+        fs.stat(path, (statErr, stats) => {
+          if (statErr) {
+            callback(statErr, false);
           }
           callback(null, stats.isDirectory());
         });
@@ -47,8 +47,8 @@ export class Wrapper {
   mkdir(path: string, callback: (err: NodeJS.ErrnoException | null) => void) {
     fs.access(path, fs.constants.F_OK, (err) => {
       if (err?.code === 'ENOENT') {
-        fs.mkdir(path, (err) => {
-          callback(err);
+        fs.mkdir(path, (mkDirErr) => {
+          callback(mkDirErr);
         });
       } else {
         callback(null);
@@ -62,9 +62,9 @@ export class Wrapper {
       if (err) {
         callback(err, []);
       } else {
-        fs.readdir(path, (err, files) => {
-          if (err) {
-            callback(err, []);
+        fs.readdir(path, (readDirErr, files) => {
+          if (readDirErr) {
+            callback(readDirErr, []);
           } else {
             callback(null, files);
           }
@@ -79,9 +79,9 @@ export class Wrapper {
       if (err) {
         callback(err, '');
       } else {
-        fs.readFile(path, 'utf8', (err, data) => {
-          if (err) {
-            callback(err, '');
+        fs.readFile(path, 'utf8', (readFileErr, data) => {
+          if (readFileErr) {
+            callback(readFileErr, '');
           }
           callback(null, data);
         });
@@ -96,17 +96,17 @@ export class Wrapper {
       } else if (err) {
         callback(err);
       } else if (fs.statSync(path).isFile()) {
-        fs.unlink(path, (err) => {
-          if (err) {
-            callback(err);
+        fs.unlink(path, (unlErr) => {
+          if (unlErr) {
+            callback(unlErr);
           } else {
             callback(null);
           }
         });
       } else {
-        fs.rmdir(path, (err) => {
-          if (err) {
-            callback(err);
+        fs.rmdir(path, (rmErr) => {
+          if (rmErr) {
+            callback(rmErr);
           }
           callback(null);
         });
@@ -122,11 +122,11 @@ export class Wrapper {
       } else if (err) {
         callback(err);
       } else {
-        fs.access(dest, fs.constants.F_OK, (err) => {
-          if (err?.code === 'ENOENT') {
-            fs.rename(src, dest, (err) => {
-              if (err) {
-                callback(err);
+        fs.access(dest, fs.constants.F_OK, (accessErr) => {
+          if (accessErr?.code === 'ENOENT') {
+            fs.rename(src, dest, (renameErr) => {
+              if (renameErr) {
+                callback(renameErr);
               } else {
                 callback(null);
               }
