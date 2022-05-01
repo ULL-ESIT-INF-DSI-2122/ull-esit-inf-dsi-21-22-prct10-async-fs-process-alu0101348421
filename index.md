@@ -33,6 +33,18 @@ A lo largo de esta práctica, nos centraremos en el uso de callbacks y funciones
 ## Ejercicio 01
 En este ejercicio se nos propone un código de observación de archivos al que vamos a realizar una traza de ejecución.
 
+En primer lugar, se muestra como tenemos tres partes, la pila de llamadas, la cola, y la pila de la api.
+![Inicial](img/01.png)
+Se puede ver como primero asignamos `filename` a la entrada de argumentos y después usamos access para ver si el archivo existe.
+![watcher](img/02.png)
+Después ejecutamos un console.log diciendo que el archivo se va a analizar, se ejecuta el watcher, que irá a la cola de API, y luego se ejecutará el console log para mostrar que el archivo se deja de analizar. Este es el punto en el que el programa falla, pues no se debería mostrar esto hasta que el archivo se deja de analizar.
+![watch process](img/03.png)
+Ahora se ha terminado de ejecutar la línea principal del programa, pero queda el watcher analizando los cambios
+![wait](img/04.png)
+![file changed](img/05.png)
+Si en algún momento cambia el archivo, el watcher mandará a la cola un console.log diciendo que el archivo ha cambiado.
+![console](img/06.png)
+Al final, se enviará esta llamada al console.log, pero el watcher seguirá analizando el archivo.
 
 ## Ejercicio 02
 En este ejercicio se nos pide un código que nos permita contar el número de veces que se repite una palabra en un archivo.
