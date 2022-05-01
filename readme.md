@@ -437,6 +437,3 @@ yargs
       },
     })
 ```
-
-# Conclusión
-En esta práctica se ha mostrado como hacer uso de las funciones asíncronas de Node.js para realizar aplicaciones que nos permitan trabajar con ficheros, directorios y subprocesos.
