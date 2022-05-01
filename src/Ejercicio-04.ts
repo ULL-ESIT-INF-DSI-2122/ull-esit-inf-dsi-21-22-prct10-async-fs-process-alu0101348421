@@ -14,21 +14,32 @@ export class Wrapper {
 
   isFile(path: string, callback: (err: NodeJS.ErrnoException | null,
     isFile: boolean) => void): void {
-    fs.stat(path, (err, stats) => {
+    fs.access(path, fs.constants.F_OK, (err) => {
       if (err) {
-        callback(err, false);
+        callback(null, false);
+      } else {
+        fs.stat(path, (err, stats) => {
+          if (err) {
+            callback(err, false);
+          }
+          callback(null, stats.isFile());
+        });
       }
-      callback(null, stats.isFile());
     });
   }
 
   isDir(path: string, callback: (err: NodeJS.ErrnoException | null,
     isDirectory: boolean) => void): void {
-    fs.stat(path, (err, stats) => {
+    fs.access(path, fs.constants.F_OK, (err) => {
       if (err) {
-        callback(err, false);
+        callback(null, false);
       } else {
-        callback(null, stats.isDirectory());
+        fs.stat(path, (err, stats) => {
+          if (err) {
+            callback(err, false);
+          }
+          callback(null, stats.isDirectory());
+        });
       }
     });
   }
@@ -62,23 +73,53 @@ export class Wrapper {
     });
   }
 
-  // remove file or dir
   rm(path: string, callback: (err: NodeJS.ErrnoException | null) => void) {
-    fs.unlink(path, (err) => {
-      if (err) {
+    fs.access(path, fs.constants.F_OK, (err) => {
+      if (err?.code === 'ENOENT') {
+        callback(new Error('File not found'));
+      } else if (err) {
         callback(err);
+      } else if (fs.statSync(path).isFile()) {
+        fs.unlink(path, (err) => {
+          if (err) {
+            callback(err);
+          } else {
+            callback(null);
+          }
+        });
+      } else {
+        fs.rmdir(path, (err) => {
+          if (err) {
+            callback(err);
+          }
+          callback(null);
+        });
       }
-      callback(null);
     });
   }
 
   move(src: string, dest: string, callback: (err: NodeJS.ErrnoException | null)
       => void) {
-    fs.rename(src, dest, (err) => {
-      if (err) {
+    fs.access(src, fs.constants.F_OK, (err) => {
+      if (err?.code === 'ENOENT') {
+        callback(new Error('File not found'));
+      } else if (err) {
         callback(err);
+      } else {
+        fs.access(dest, fs.constants.F_OK, (err) => {
+          if (err?.code === 'ENOENT') {
+            fs.rename(src, dest, (err) => {
+              if (err) {
+                callback(err);
+              } else {
+                callback(null);
+              }
+            });
+          } else {
+            callback(new Error('File already exists'));
+          }
+        });
       }
-      callback(null);
     });
   }
 }
@@ -162,7 +203,9 @@ yargs
           if (err) {
             console.log(err);
           } else {
-            console.log(files);
+            for (const file of files) {
+              console.log(file);
+            }
           }
         });
       },
