@@ -60,6 +60,16 @@ export function searchPipe(file: string, word: string, callback:
   });
 }
 
-// export function searchSubprocess(file: string, word: string, callback:
-//     (err: ExecException | NodeJS.ErrnoException | null, count: number)
-//     => void) {
+export function searchSubprocess(file: string, word: string, callback:
+    (err: NodeJS.ErrnoException | null, count: number) => void) {
+  access(file, constants.F_OK, (err) => {
+    if (err) {
+      callback(err, 0);
+    }
+    const grepStream = spawn('grep', ['-o', word, file]);
+    grepStream.stdout.on('data', (data) => {
+      const count = data.toString().split('\n').length - 1;
+      callback(null, count);
+    });
+  });
+}

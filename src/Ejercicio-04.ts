@@ -45,31 +45,47 @@ export class Wrapper {
   }
 
   mkdir(path: string, callback: (err: NodeJS.ErrnoException | null) => void) {
-    fs.mkdir(path, (err) => {
-      if (err) {
-        callback(err);
+    fs.access(path, fs.constants.F_OK, (err) => {
+      if (err?.code === 'ENOENT') {
+        fs.mkdir(path, (err) => {
+          callback(err);
+        });
+      } else {
+        callback(null);
       }
-      callback(null);
     });
   }
 
   ls(path: string, callback: (err: NodeJS.ErrnoException | null,
       files: string[]) => void) {
-    fs.readdir(path, (err, files) => {
+    fs.access(path, fs.constants.F_OK, (err) => {
       if (err) {
         callback(err, []);
+      } else {
+        fs.readdir(path, (err, files) => {
+          if (err) {
+            callback(err, []);
+          } else {
+            callback(null, files);
+          }
+        });
       }
-      callback(null, files);
     });
   }
 
   readFile(path: string, callback: (err: NodeJS.ErrnoException | null,
       data: string) => void) {
-    fs.readFile(path, 'utf8', (err, data) => {
+    fs.access(path, fs.constants.F_OK, (err) => {
       if (err) {
         callback(err, '');
+      } else {
+        fs.readFile(path, 'utf8', (err, data) => {
+          if (err) {
+            callback(err, '');
+          }
+          callback(null, data);
+        });
       }
-      callback(null, data);
     });
   }
 

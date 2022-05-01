@@ -11,7 +11,6 @@
     "ej2": "tsc && node dist/Ejercicio-02.js",
     "ej3": "tsc && node dist/Ejercicio-03.js",
     "ej4": "tsc && node dist/Ejercicio-04.js ",
-    "mod": "tsc && node dist/modificacion/watch.js test/testDir/ficheroPrueba.txt",
     "doc": "typedoc"
   },
   "nyc": {
