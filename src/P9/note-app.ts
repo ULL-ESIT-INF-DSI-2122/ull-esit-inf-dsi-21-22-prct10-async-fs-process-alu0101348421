@@ -7,7 +7,7 @@ import {Management} from './management';
  * Objeto de manejo de notas
  * @type {management}
  */
-const gestor = new Management();
+const gestor = new Management('src/P9/db');
 
 /**
  * Yargs para la línea de comandos

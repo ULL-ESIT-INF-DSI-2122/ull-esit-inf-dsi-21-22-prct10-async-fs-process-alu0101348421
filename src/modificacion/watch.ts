@@ -13,14 +13,11 @@ export class WatchFile {
    * @param {string} command - Nombre del comando a ejecutar.
    * @param {string[]} args - Argumentos del comando.
    */
-  constructor(private file: string, private command: string,
-      private args: string[]) {
+  constructor(private readonly file: string, private readonly command: string,
+      private readonly args: string[]) {
     access(file, (err) => {
       if (err) {
         console.log(`File ${file} not found`);
-        return;
-      } else {
-        this.run();
       }
     });
   }
@@ -30,11 +27,10 @@ export class WatchFile {
    * @return {void}
    * @private
    */
-  private run() {
+  public run() {
     access(this.file, (err) => {
       if (err) {
         console.log(`${this.file} not found`);
-        return;
       } else {
         watch(this.file, (event, filename) => {
           if (event === 'change') {
@@ -67,9 +63,12 @@ if (argv.length < 3) {
 }
 const file = argv[2];
 if (argv.length === 3) {
-  new WatchFile(file, 'ls', ['-lh', file]);
+  const watchFile = new WatchFile(file, 'ls', ['-lh', file]);
+  watchFile.run();
 } else if (argv.length === 4) {
-  new WatchFile(file, argv[3], []);
+  const watchFile = new WatchFile(file, argv[3], []);
+  watchFile.run();
 } else {
-  new WatchFile(file, argv[3], argv.slice(4));
+  const watchFile = new WatchFile(file, argv[3], argv.slice(4));
+  watchFile.run();
 }
